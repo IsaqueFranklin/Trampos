@@ -9,6 +9,8 @@ import { COLORS, icons, SIZES } from '../../constants';
 import useFetch from "../../hook/useFetch";
 
 
+const tabs = ["Sobre", "Requisitos", "Responsabilidades"];
+
 const JobDetails = () => {
     const params = useSearchParams();
     const router = useRouter();
@@ -18,6 +20,7 @@ const JobDetails = () => {
     })
 
     const [refreshing, setRefreshing] = useState(false);
+    const [activeTab, setActiveTab] = useState(tasb[0]);
 
     const onRefresh = () => {}
 
@@ -46,21 +49,29 @@ const JobDetails = () => {
             />
 
             <>
-                <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                    {isLoading ? (
-                        <ActivityIndicator size="large" color={COLORS.primary} />
-                    ) : error ? (
-                        <Text>Algo deu errado.</Text>
-                    ) : data.length === 0 ? (
-                        <Text>Sem dados.</Text>
-                    ) : (
-                        <View style={{ padding: SIZES.medium, paddingBottom: 100}}>
-                            <Company 
-                            
-                            />
+            <ScrollView showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                >
+                {isLoading ? (
+                    <ActivityIndicator size='large' color={COLORS.primary} />
+                ) : error ? (
+                    <Text>Something went wrong</Text>
+                ) : data.length === 0 ? (
+                    <Text>No data available</Text>
+                ) : (
+                    <View style={{ padding: SIZES.medium, paddingBottom: 100 }}>
+                    <Company
+                        companyLogo={data[0].employer_logo}
+                        jobTitle={data[0].job_title}
+                        companyName={data[0].employer_name}
+                        location={data[0].job_country}
+                    />
 
                             <JobTabs 
-                            
+                                tabs={tabs}
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
                             />
                         </View>
                     )}
